@@ -75,4 +75,13 @@ app.post('/api/admin/create-project', authorize(['Admin']), (req, res) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+const path = require('path');
+
+// 1. Serve the static files from the React app build folder
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+// 2. Handle any requests that don't match the ones above
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
+app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
